@@ -11,7 +11,7 @@ workflow PACBIO_MAP_MERGE {
     main:
         ch_hiFiBams = Channel.empty()
         if (params.hiFiBams) {
-            ch_hiFiBams = Channel.fromPath(hiFiBams)
+            ch_hiFiBams = Channel.fromPath(params.hiFiBams)
         }
 
         ch_fastqs = Channel.empty()
