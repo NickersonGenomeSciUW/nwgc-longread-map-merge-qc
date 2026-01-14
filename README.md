@@ -21,12 +21,11 @@ B@{shape: diamond, label: "Sequencing<BR>Platform ?"}
 style B fill:#ffffcc
 style B font-size:0.9em
 B -. "PacBio" .-> C
-C["Pacbio Map Merge"]
+C["Pacbio Map Merge"] --> E
 B -. "ONT" .-> D
 D@{shape: diamond, label: "ONT<BR>Action ?"}
 style D fill:#ffffcc
 style D font-size:0.9em
-C -- "merged.bam" --> E
 E["QC"]
 D -. "Base Call" .-> F
 F["Base Call"] --> E
