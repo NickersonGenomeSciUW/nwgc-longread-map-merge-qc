@@ -1,36 +1,40 @@
-# nextflow
+# nwgc-nf-longread-map-merge-qc
+[![License](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.txt)
 
-## Envirnomental varialbles for your bash profile
-| Nextflow Env Variable  	| Description 	|
-|---	|---	|
-| export NXF_ASSETS="/net/nwgc/vol1/software/nextflow" | # location to store  downloaded pipelines |
-| export NXF_ORG="NickersonGenomeSciUW" | # github organization to look for pipelines |
-| export NXF_SCM_FILE="/net/nwgc/vol1/software/nextflow/scm" | # config file for connecting to private github repo |
+Contact: nwgc-software@uw.edu
 
+----
 
-## SCM file for connecting to private github repo
-    providers {
-    
-        github {
-            platform = 'github'
-            server = 'https://github.com'
-            endpoint = 'https://api.github.com'
-        }
-            
-    }
-    
-    
-## NOT for this file in the long run...but we may need to use this for memory
-    process my_process {
-    cpus 2
+## Introduction
 
-    memory { 16.GB * task.attempt }
-    clusterOptions "-l h_vmem=${task.memory.toMega()/cpus}M " + clusterOptions
+Long Read Map Merge QC
+A Nextflow pipeline to process Pacbio/ONT data through alignment, merge and qc.
 
-
-    errorStrategy { task.exitStatus == 140 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors -1
-
-    ...
-}
+```mermaid
+---
+title: Pipeline Overview
+---
+flowchart TD
+A["Long Read Sequencer"] -- "sequencing data" --> B
+style A fill:#E0E0E0
+B@{shape: diamond, label: "Sequencing<BR>Platform ?"}
+style B fill:#ffffcc
+style B font-size:0.9em
+B -. "PacBio" .-> C
+C["Pacbio Map Merge"]
+B -. "ONT" .-> D
+D@{shape: diamond, label: "ONT<BR>Action ?"}
+style D fill:#ffffcc
+style D font-size:0.9em
+C -- "merged.bam" --> E
+E["QC"]
+D -. "Base Call" .-> F
+F["Base Call"] --> E
+D -. "Release Data" .-> G
+G["Backup Live Model"] --> H
+H["Merge Sup Bams"] --> E
+D -. "Re-Base Call" .-> I
+I["Setup Base Call Environment"] --> J
+J["ONT Map Merge"] --> E
+D -. "Default" .-> J
+```
